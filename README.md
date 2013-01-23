@@ -11,7 +11,9 @@ the use of `lofiadm(1M)`, `ufs(7FS)` and `hsfs(7FS)`.
 
 ## Zone Setup
 
-Example configuration for a zone used for `smartos-isomerge`.  For existing zones, ```vmadm update ID fs_allowed=hsfs,lofs,ufs``` should work.
+Example configuration for a zone used for `smartos-isomerge`.
+
+For existing zones, ```vmadm update ID fs_allowed=hsfs,lofs,ufs``` should work.
 
 ```javascript
 {
@@ -32,6 +34,12 @@ Example configuration for a zone used for `smartos-isomerge`.  For existing zone
     "8.8.4.4"
   ]
 }
+```
+
+Use `pkgsrc` to install the `cdrtools` inside the zone for access to the `mkisofs` utility:
+
+```bash
+# pkgin in cdrtools
 ```
 
 ## Usage
@@ -68,7 +76,7 @@ files to the utility.  e.g.
 
 Then, invoke the utility:
 
-```
+```bash
 # ./merge.js < input.json
  * mkdir /var/tmp/isomerge-quagga
  * lofi add /sysmgr/apps/smartos/releases/smartos-20130111T010112Z.iso
