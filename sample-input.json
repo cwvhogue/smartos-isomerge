@@ -1,8 +1,24 @@
 {
-  "workdir": "/var/tmp/ISOMERG",
-  "inputiso": "/sysmgr/apps/smartos/releases/smartos-20120223T221136Z.iso",
+  "workdir": "/var/tmp/isomerge-quagga",
+  "inputiso": "/sysmgr/apps/smartos/releases/smartos-20130111T010112Z.iso",
+  "mergedirs": {
+    "/usr/sbin": {
+      "owner": "root",
+      "group": "bin",
+      "perms": "0755"
+    }
+  },
   "mergefiles": {
-    "/etc/issue": { "owner": "root", "group": "sys", "perms": "0444",
-                     "src": "/tmp/newissue" }
+    "/usr/sbin/quaggaadm": {
+      "owner": "root",
+      "group": "bin",
+      "perms": "0555",
+      "src": "/content/quagga/usr/sbin/quaggaadm"
+    }
+  },
+  "mergelinks": {
+    "/usr/sbin/zebraadm": {
+      "target": "quaggaadm"
+    }
   }
 }

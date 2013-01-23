@@ -95,8 +95,14 @@ config.readStdinConfig(function(err, C) {
         options: [ 'rw', 'nologging' ] }, next);
     },
 
+    // merge dirs
+    $.apply(mergeDirs, rootdir, C.mergedirs),
+
     // merge files
     $.apply(mergeFiles, rootdir, C.mergefiles),
+
+    // merge links
+    $.apply(mergeLinks, rootdir, C.mergelinks),
 
     // unmount /usr
     $.apply(_.umount, usrdir),
@@ -135,6 +141,26 @@ config.readStdinConfig(function(err, C) {
   });
 });
 
+function mergeDirs(rootdir, dirs, callback)
+{
+  log(' * #yellow[merging dirs...]');
+  $.forEachSeries(Object.keys(dirs).sort(), function(dir, next) {
+    var realdir = path.join(rootdir, dir);
+    $.series([
+      $.apply(_.mkdir_p, { path: realdir }),
+      $.apply(_.chown, { file: realdir, owner: dirs[dir].owner,
+        group: dirs[dir].group }),
+      $.apply(_.chmod, { file: realdir, perms: dirs[dir].perms })
+    ], function(err) {
+      next(err);
+    });
+  },
+  function(err) {
+    log(' * #yellow[...done merging dirs]');
+    callback(err);
+  });
+}
+
 function mergeFiles(rootdir, files, callback)
 {
   log(' * #yellow[merging files...]');
@@ -151,6 +177,23 @@ function mergeFiles(rootdir, files, callback)
   },
   function(err) {
     log(' * #yellow[...done merging files]');
+    callback(err);
+  });
+}
+
+function mergeLinks(rootdir, links, callback)
+{
+  log(' * #yellow[merging links...]');
+  $.forEachSeries(Object.keys(links).sort(), function(link, next) {
+    var reallink = path.join(rootdir, link);
+    $.series([
+      $.apply(_.ln, { dest: realllink, target: links[link].target })
+    ], function(err) {
+      next(err);
+    });
+  },
+  function(err) {
+    log(' * #yellow[...done merging links]');
     callback(err);
   });
 }
