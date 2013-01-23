@@ -187,7 +187,7 @@ function mergeLinks(rootdir, links, callback)
   $.forEachSeries(Object.keys(links).sort(), function(link, next) {
     var reallink = path.join(rootdir, link);
     $.series([
-      $.apply(_.ln, { dest: reallink, target: links[link].target })
+      $.apply(_.ln, { dest: reallink, target: links[link].target, symbolic: true, force: true })
     ], function(err) {
       next(err);
     });
